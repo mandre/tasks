@@ -203,6 +203,15 @@ public class Migrations {
         }
       };
 
+  private static final Migration MIGRATION_59_60 =
+      new Migration(59, 60) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+          database.execSQL(
+              "CREATE TABLE IF NOT EXISTS `taskwarrior_accounts` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT, `name` TEXT, `server` TEXT, `credentials` TEXT, `certificate` TEXT, `key` TEXT, `ca` TEXT, `trust` TEXT, `error` TEXT)");
+        }
+      };
+
   public static final Migration[] MIGRATIONS =
       new Migration[] {
         MIGRATION_35_36,
@@ -219,7 +228,8 @@ public class Migrations {
         MIGRATION_52_53,
         MIGRATION_53_54,
         MIGRATION_54_58,
-        MIGRATION_58_59
+        MIGRATION_58_59,
+        MIGRATION_59_60,
       };
 
   private static Migration NOOP(int from, int to) {

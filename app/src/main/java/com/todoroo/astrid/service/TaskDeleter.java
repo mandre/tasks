@@ -17,6 +17,7 @@ import org.tasks.data.CaldavCalendar;
 import org.tasks.data.DeletionDao;
 import org.tasks.data.GoogleTaskAccount;
 import org.tasks.data.GoogleTaskList;
+import org.tasks.data.TaskwarriorAccount;
 import org.tasks.jobs.WorkManager;
 
 public class TaskDeleter {
@@ -105,6 +106,13 @@ public class TaskDeleter {
 
   public void delete(CaldavAccount caldavAccount) {
     List<Long> ids = deletionDao.delete(caldavAccount);
+    workManager.cleanup(ids);
+    localBroadcastManager.broadcastRefresh();
+    localBroadcastManager.broadcastRefreshList();
+  }
+
+  public void delete(TaskwarriorAccount taskwarriorAccount) {
+    List<Long> ids = deletionDao.delete(taskwarriorAccount);
     workManager.cleanup(ids);
     localBroadcastManager.broadcastRefresh();
     localBroadcastManager.broadcastRefreshList();

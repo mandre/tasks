@@ -21,6 +21,7 @@ import org.tasks.data.TagDao;
 import org.tasks.data.TagDataDao;
 import org.tasks.data.TaskAttachmentDao;
 import org.tasks.data.TaskListMetadataDao;
+import org.tasks.data.TaskwarriorDao;
 import org.tasks.data.UserActivityDao;
 import org.tasks.db.Migrations;
 import org.tasks.locale.Locale;
@@ -129,6 +130,12 @@ public class ApplicationModule {
   @ApplicationScope
   public CaldavDao getCaldavDao(Database database) {
     return database.getCaldavDao();
+  }
+
+  @Provides
+  @ApplicationScope
+  public TaskwarriorDao getTaskwarriorDao(Database database) {
+    return database.getTaskwarriorDao();
   }
 
   @Provides

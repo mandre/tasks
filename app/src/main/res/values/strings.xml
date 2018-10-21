@@ -875,4 +875,19 @@ File %1$s contained %2$s.\n\n
   <string name="cannot_access_account">Cannot access account</string>
   <string name="reinitialize_account">Reinitialize</string>
   <string name="action_create_new_task">Create new task</string>
+  <string name="Taskwarrior">Taskwarrior</string>
+  <string name="server">Server</string>
+  <string name="credentials">Credentials</string>
+  <string name="certificate">Certificate</string>
+  <string name="key">Key</string>
+  <string name="ca">CA</string>
+  <string name="trust">Trust</string>
+  <string name="credentials_required">Credentials required</string>
+  <string name="certificate_required">Certificate required</string>
+  <string name="key_required">Key required</string>
+  <string name="ca_required">CA required</string>
+  <string name="trust_required">Trust required</string>
+  <string name="taskwarrior_trust_strict">strict</string>
+  <string name="taskwarrior_trust_ignore_hostname">ignore hostname</string>
+  <string name="taskwarrior_trust_allow_all">allow all</string>
 </resources>

@@ -124,4 +124,14 @@ public abstract class DeletionDao {
     deleteCaldavAccount(caldavAccount);
     return deleted;
   }
+
+  @Delete
+  abstract void deleteTaskwarriorAccount(TaskwarriorAccount taskwarriorAccount);
+
+  @Transaction
+  public List<Long> delete(TaskwarriorAccount taskwarriorAccount) {
+    List<Long> deleted = new ArrayList<>();
+    deleteTaskwarriorAccount(taskwarriorAccount);
+    return deleted;
+  }
 }

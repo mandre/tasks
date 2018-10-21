@@ -35,6 +35,8 @@ import org.tasks.data.TaskAttachment;
 import org.tasks.data.TaskAttachmentDao;
 import org.tasks.data.TaskListMetadata;
 import org.tasks.data.TaskListMetadataDao;
+import org.tasks.data.TaskwarriorAccount;
+import org.tasks.data.TaskwarriorDao;
 import org.tasks.data.UserActivity;
 import org.tasks.data.UserActivityDao;
 import org.tasks.notifications.Notification;
@@ -58,9 +60,10 @@ import timber.log.Timber;
       CaldavCalendar.class,
       CaldavTask.class,
       CaldavAccount.class,
-      GoogleTaskAccount.class
+      GoogleTaskAccount.class,
+      TaskwarriorAccount.class
     },
-    version = 59)
+    version = 60)
 public abstract class Database extends RoomDatabase {
 
   public static final String NAME = "database";
@@ -93,6 +96,8 @@ public abstract class Database extends RoomDatabase {
   public abstract TaskDao getTaskDao();
 
   public abstract CaldavDao getCaldavDao();
+
+  public abstract TaskwarriorDao getTaskwarriorDao();
 
   public abstract DeletionDao getDeletionDao();
 

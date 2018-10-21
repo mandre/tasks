@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/root_layout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="?attr/asContentBackground"
+  android:orientation="vertical">
+
+  <include layout="@layout/toolbar"/>
+
+  <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:descendantFocusability="beforeDescendants"
+      android:focusableInTouchMode="true"
+      android:orientation="vertical">
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/name_layout"
+        style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/name"
+          android:imeOptions="flagNoExtractUi"
+          android:inputType="textCapSentences|textAutoCorrect"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/server_layout"
+        style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/server"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/server"
+          android:imeOptions="flagNoExtractUi"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/credentials_layout"
+        style="@style/TagSettingsRow"
+          app:passwordToggleEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/credentials"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/credentials"
+          android:imeOptions="flagNoExtractUi"
+          android:inputType="textPassword"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/certificate_layout"
+        style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/certificate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/certificate"
+          android:clickable="true"
+          android:focusable="false"
+          android:imeOptions="flagNoExtractUi"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/key_layout"
+          style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/key"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/key"
+          android:clickable="true"
+          android:focusable="false"
+          android:imeOptions="flagNoExtractUi"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/ca_layout"
+          style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/ca"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/ca"
+          android:clickable="true"
+          android:focusable="false"
+          android:imeOptions="flagNoExtractUi"
+          android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+      <!--TODO(mandre) Make this a list-->
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/trust_layout"
+          style="@style/TagSettingsRow">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/trust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/trust"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:textColor="?attr/asTextColor"/>
+
+      </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+  </ScrollView>
+
+</LinearLayout>

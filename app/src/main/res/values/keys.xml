@@ -225,6 +225,7 @@
   <string name="tracking_category_tasker">Tasker</string>
   <string name="tracking_category_backup">Backup</string>
   <string name="tracking_category_caldav">Caldav</string>
+  <string name="tracking_category_taskwarrior">Taskwarrior</string>
   <string name="tracking_action_add">Add</string>
   <string name="tracking_action_start">Start</string>
   <string name="tracking_action_new_list">New List</string>

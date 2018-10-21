@@ -9,6 +9,10 @@
     android:key="@string/CalDAV"
     android:title="@string/CalDAV"/>
 
+  <PreferenceCategory
+    android:key="@string/Taskwarrior"
+    android:title="@string/Taskwarrior"/>
+
   <PreferenceCategory android:title="@string/sync_SPr_interval_title">
     <CheckBoxPreference
       android:defaultValue="true"

@@ -29,10 +29,13 @@ import org.tasks.data.CaldavDao;
 import org.tasks.data.GoogleTaskAccount;
 import org.tasks.data.GoogleTaskDao;
 import org.tasks.data.GoogleTaskListDao;
+import org.tasks.data.TaskwarriorAccount;
+import org.tasks.data.TaskwarriorDao;
 import org.tasks.dialogs.DialogBuilder;
 import org.tasks.gtasks.GoogleAccountManager;
 import org.tasks.gtasks.GtaskSyncAdapterHelper;
 import org.tasks.gtasks.PlayServices;
+import org.tasks.taskwarrior.TaskwarriorAccountSettingsActivity;
 import org.tasks.injection.ActivityComponent;
 import org.tasks.injection.InjectingPreferenceActivity;
 import org.tasks.jobs.WorkManager;
@@ -45,10 +48,12 @@ public class SynchronizationPreferences extends InjectingPreferenceActivity {
 
   private static final String KEY_ADD_GOOGLE_TASKS = "add_google_tasks";
   private static final String KEY_ADD_CALDAV = "add_caldav";
+  private static final String KEY_ADD_TASKWARRIOR = "add_taskwarrior";
   private static final int REQUEST_LOGIN = 0;
   private static final int REQUEST_CALDAV_SETTINGS = 101;
   private static final int REQUEST_CALDAV_SUBSCRIBE = 102;
   private static final int REQUEST_GOOGLE_TASKS_SUBSCRIBE = 103;
+  private static final int REQUEST_TASKWARRIOR_SETTINGS = 104;
 
   @Inject ActivityPermissionRequestor permissionRequestor;
   @Inject PermissionChecker permissionChecker;
@@ -63,6 +68,7 @@ public class SynchronizationPreferences extends InjectingPreferenceActivity {
   @Inject Preferences preferences;
   @Inject WorkManager workManager;
   @Inject CaldavDao caldavDao;
+  @Inject TaskwarriorDao taskwarriorDao;
   @Inject Inventory inventory;
   @Inject TaskDeleter taskDeleter;
 
@@ -125,6 +131,7 @@ public class SynchronizationPreferences extends InjectingPreferenceActivity {
     }
 
     addCaldavAccounts();
+    addTaskwarriorAccounts();
   }
 
   private void addGoogleTasksAccounts() {
@@ -228,6 +235,40 @@ public class SynchronizationPreferences extends InjectingPreferenceActivity {
         new Intent(this, CaldavAccountSettingsActivity.class), REQUEST_CALDAV_SETTINGS);
   }
 
+  private void addTaskwarriorAccounts() {
+    PreferenceCategory taskwarriorPreferences =
+            (PreferenceCategory) findPreference(getString(R.string.Taskwarrior));
+    taskwarriorPreferences.removeAll();
+    for (TaskwarriorAccount taskwarriorAccount : taskwarriorDao.getAccounts()) {
+      Preference accountPreferences = new Preference(this);
+      accountPreferences.setTitle(taskwarriorAccount.getName());
+      accountPreferences.setSummary(taskwarriorAccount.getError());
+      accountPreferences.setOnPreferenceClickListener(
+              preference -> {
+                Intent intent = new Intent(this, TaskwarriorAccountSettingsActivity.class);
+                intent.putExtra(TaskwarriorAccountSettingsActivity.EXTRA_TASKWARRIOR_DATA, taskwarriorAccount);
+                startActivityForResult(intent, REQUEST_TASKWARRIOR_SETTINGS);
+                return false;
+              });
+      taskwarriorPreferences.addPreference(accountPreferences);
+    }
+    Preference addTaskwarriorAccount = new Preference(this);
+    addTaskwarriorAccount.setKey(KEY_ADD_TASKWARRIOR);
+    addTaskwarriorAccount.setTitle(R.string.add_account);
+
+    addTaskwarriorAccount.setOnPreferenceClickListener(
+            preference -> {
+              addTaskwarriorAccount();
+              return false;
+            });
+    taskwarriorPreferences.addPreference(addTaskwarriorAccount);
+  }
+
+  private void addTaskwarriorAccount() {
+    startActivityForResult(
+            new Intent(this, TaskwarriorAccountSettingsActivity.class), REQUEST_TASKWARRIOR_SETTINGS);
+  }
+
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_LOGIN) {
@@ -249,6 +290,11 @@ public class SynchronizationPreferences extends InjectingPreferenceActivity {
     } else if (requestCode == REQUEST_GOOGLE_TASKS_SUBSCRIBE) {
       if (inventory.hasPro()) {
         requestLogin();
+      }
+    } else if (requestCode == REQUEST_TASKWARRIOR_SETTINGS) {
+      if (resultCode == RESULT_OK) {
+        workManager.updateBackgroundSync();
+        restart();
       }
     } else {
       super.onActivityResult(requestCode, resultCode, data);

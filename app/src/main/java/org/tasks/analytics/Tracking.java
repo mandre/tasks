@@ -49,7 +49,9 @@ public class Tracking {
     CALDAV_ACCOUNT_REMOVED(
         R.string.tracking_category_caldav, R.string.tracking_action_remove_account),
     CALDAV_LIST_ADDED(R.string.tracking_category_caldav, R.string.tracking_action_new_list),
-    CALDAV_LIST_DELETED(R.string.tracking_category_caldav, R.string.tracking_action_delete_list);
+    CALDAV_LIST_DELETED(R.string.tracking_category_caldav, R.string.tracking_action_delete_list),
+    TASKWARRIOR_ACCOUNT_ADDED(R.string.tracking_category_taskwarrior, R.string.tracking_action_add_account),
+    TASKWARRIOR_ACCOUNT_REMOVED(R.string.tracking_category_taskwarrior, R.string.tracking_action_remove_account);
 
     public final int category;
     public final int action;
