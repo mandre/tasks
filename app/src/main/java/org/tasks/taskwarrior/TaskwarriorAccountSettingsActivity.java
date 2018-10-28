@@ -25,6 +25,8 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import com.todoroo.astrid.helper.UUIDHelper;
 import com.todoroo.astrid.service.TaskDeleter;
+
+import java.net.ConnectException;
 import java.net.IDN;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,7 +43,10 @@ import org.tasks.injection.ThemedInjectingAppCompatActivity;
 import org.tasks.preferences.Preferences;
 import org.tasks.security.Encryption;
 import org.tasks.sync.SyncAdapters;
+import org.tasks.ui.DisplayableException;
 import org.tasks.ui.MenuColorizer;
+
+import de.aaschmid.taskwarrior.TaskwarriorException;
 import timber.log.Timber;
 
 public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompatActivity
@@ -314,6 +319,7 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
     }
 
     if (isEmpty(credentials)) {
+      // TODO(mandre) verify credentials is in the form org/user/uuid
       credentialsLayout.setError(getString(R.string.credentials_required));
       failed = true;
     }
@@ -344,11 +350,21 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
     }
 
     if (taskwarriorAccount == null) {
-      // TODO(mandre) Try to connect to server
-      addAccount(server);
+      TaskwarriorSyncClient client = new TaskwarriorSyncClient(server, credentials, certificate, key, ca, trust);
+      ProgressDialog dialog = dialogBuilder.newProgressDialog(R.string.contacting_server);
+      dialog.show();
+      client
+          .testConnection()
+          .doAfterTerminate(dialog::dismiss)
+          .subscribe(this::addAccount, this::requestFailed);
     } else if (needsValidation()) {
-      // TODO(mandre) Try to connect to server
-      updateAccount(server);
+      TaskwarriorSyncClient client = new TaskwarriorSyncClient(server, credentials, certificate, key, ca, trust);
+      ProgressDialog dialog = dialogBuilder.newProgressDialog(R.string.contacting_server);
+      dialog.show();
+      client
+          .testConnection()
+          .doAfterTerminate(dialog::dismiss)
+          .subscribe(this::updateAccount, this::requestFailed);
     } else if (hasChanges()) {
       updateAccount(taskwarriorAccount.getServer());
     } else {
@@ -357,11 +373,11 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
   }
 
   private void addAccount(String server) {
-    Timber.d("Found server: %s", server);
+    Timber.d("Validated server: %s", server);
 
     TaskwarriorAccount newAccount = new TaskwarriorAccount();
     newAccount.setName(getNewName());
-    newAccount.setServer(server);
+    newAccount.setServer(getNewServer());
     newAccount.setCredentials(encryption.encrypt(getNewCredentials()));
     newAccount.setCertificate(getNewCertificate());
     newAccount.setKey(getNewKey());
@@ -377,8 +393,10 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
   }
 
   private void updateAccount(String server) {
+    Timber.d("Validated server: %s", server);
+
     taskwarriorAccount.setName(getNewName());
-    taskwarriorAccount.setServer(server);
+    taskwarriorAccount.setServer(getNewServer());
     taskwarriorAccount.setError("");
     if (credentialsChanged()) {
       taskwarriorAccount.setCredentials(encryption.encrypt(getNewCredentials()));
@@ -392,6 +410,19 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
 
     setResult(RESULT_OK);
     finish();
+  }
+
+  private void requestFailed(Throwable t) {
+    if (t instanceof TaskwarriorException) {
+      showSnackbar(t.getMessage());
+    } else if (t instanceof DisplayableException) {
+      showSnackbar(((DisplayableException) t).getResId());
+    } else if (t instanceof ConnectException) {
+      showSnackbar(R.string.network_error);
+    } else {
+      Timber.e(t);
+      showSnackbar(R.string.error_adding_account);
+    }
   }
 
   private void showSnackbar(int resId) {
@@ -408,7 +439,6 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
     snackbar.show();
   }
 
-  // TODO(mandre) Update to all fields
   private boolean hasChanges() {
     if (taskwarriorAccount == null) {
       return !isEmpty(getNewName())
@@ -423,6 +453,7 @@ public class TaskwarriorAccountSettingsActivity extends ThemedInjectingAppCompat
   }
 
   private boolean needsValidation() {
+    // TODO(mandre) Also needs validation if path to certificate etc changed
     return !getNewServer().equals(taskwarriorAccount.getServer())
         || credentialsChanged();
   }

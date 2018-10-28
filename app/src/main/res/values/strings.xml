@@ -890,4 +890,5 @@ File %1$s contained %2$s.\n\n
   <string name="taskwarrior_trust_strict">strict</string>
   <string name="taskwarrior_trust_ignore_hostname">ignore hostname</string>
   <string name="taskwarrior_trust_allow_all">allow all</string>
+  <string name="taskwarrior_failed_to_connect">Failed to connect to taskd server</string>
 </resources>

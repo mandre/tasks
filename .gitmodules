@@ -4,3 +4,6 @@
 [submodule "dav4android"]
 	path = dav4android
 	url = https://gitlab.com/tasks.org/dav4android.git
+[submodule "taskwarrior-java-client"]
+	path = taskwarrior-java-client
+	url = https://github.com/aaschmid/taskwarrior-java-client.git
